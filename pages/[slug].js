@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import Stats from "../components/Stats";
 
 const PokemonDetailPage = (pokemon) => {
 	const {
@@ -18,6 +19,7 @@ const PokemonDetailPage = (pokemon) => {
 		nextName,
 		nextId,
 	} = pokemon;
+	console.log(stats);
 	return (
 		<div className="w-screen font-Raleway">
 			<div className="max-w-4xl gap-20 p-20 mx-auto flex flex-col items-center bg-neutral-800">
@@ -56,7 +58,7 @@ const PokemonDetailPage = (pokemon) => {
 										{genera[7].genus.replace(" Pokémon", "")}
 									</span>
 								</p>
-								<p className="w-1/2 flex flex-col border">
+								<p className="w-1/2 flex flex-col">
 									Ability{" "}
 									<span className="capitalize font-semibold">
 										{abilities[0].ability.name}
@@ -65,28 +67,32 @@ const PokemonDetailPage = (pokemon) => {
 							</div>
 						</div>{" "}
 					</div>
-					<div className="flex w-full justify-between">
-						{evolutionChain.map((pokemon) => (
-							<Link href={"/" + pokemon.name}>
-								<div className="flex flex-col gap-4 mx-auto justify-center items-center relative cursor-pointer">
-									<div className="rounded-full border-8 border-neutral-500 p-4 bg-neutral-900">
-										<Image
-											src={pokemon.imageUrl}
-											height="100"
-											width="100"
-											objectFit="contain"
-										/>{" "}
+					<div className="flex w-full justify-between items-center">
+						{evolutionChain.map((pokemon, i) => (
+							<>
+								{i > 0 && <p className="text-7xl font-semibold">{">"}</p>}
+								<Link href={"/" + pokemon.name}>
+									<div className="flex flex-col gap-4 mx-auto justify-center items-center relative cursor-pointer">
+										<div className="rounded-full hover:bg-transparent transition-all hover:border-neutral-300 border-8 border-neutral-500 p-4 bg-neutral-900">
+											<Image
+												src={pokemon.imageUrl}
+												height="100"
+												width="100"
+												objectFit="contain"
+											/>{" "}
+										</div>
+										<p className="capitalize font-semibold">
+											{pokemon.name}{" "}
+											<span className="font-normal text-neutral-400">
+												#{pokemon.id}
+											</span>
+										</p>
 									</div>
-									<p className="capitalize font-semibold">
-										{pokemon.name}{" "}
-										<span className="font-normal text-neutral-400">
-											#{pokemon.id}
-										</span>
-									</p>
-								</div>
-							</Link>
+								</Link>
+							</>
 						))}
 					</div>
+					<Stats stats={stats} />
 				</div>
 				<Link href="/">
 					<button className="border py-2 px-4 rounded-md">Back</button>
@@ -186,26 +192,3 @@ export async function getServerSideProps(context) {
 		props: pokemon,
 	};
 }
-
-/* <div className="text-xl text-white">
-			<div>Name:{name}</div>
-			<div>Id: {id}</div>
-			<div>Info: {texts[0].flavor_text}</div>
-			<div>Category: {genera[7].genus.replace(" Pokémon", "")}</div>
-			<div>Height: {height}kg</div>
-			<div>Weight: {weight}kg</div>
-			{stats.map((item) => (
-				<div key={item.stat.name}>
-					{item.stat.name} : {item.base_stat}
-				</div>
-			))}
-			<div className="capitalize">Ability: {abilities[0].ability.name}</div>
-			{evolutionChain.map((item, i) => (
-				<div>
-					Evolution {i + 1} : {item.name}
-					<div className="flex w-32 h-32">
-						<Image src={item.imageUrl} height="200" width="200" />
-					</div>
-				</div>
-			))}
-		</div> */
